@@ -1,0 +1,6 @@
+asyncio-nats-client==0.11.4
+asyncio-nats-streaming==0.4.0
+bson==0.5.10
+protobuf==3.14.0
+python-dateutil==2.8.1
+six==1.15.0
