@@ -1,0 +1,27 @@
+version: "3"
+
+networks:
+  test_net:
+    driver: bridge
+
+services:
+  # ########################
+  # #### NATS Streaming ####
+  nats:
+    image: nats-streaming
+    container_name: simple_nats
+    command: -p 4223
+    ports:
+    - 4223:4223
+    networks:
+      - test_net
+
+  asyncio_service:
+    image: simple_asyncio_service
+    build:
+      context: .
+    container_name: simple_service
+    depends_on:
+      - nats
+    networks:
+      - test_net

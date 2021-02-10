@@ -52,6 +52,5 @@ def main():
 
 
 if __name__ == '__main__':
-    print(f'{get_current_time()}BIM Data Service...')
-    print(f'{get_current_time()}Schema Validation Worker started:')
+    print(f'{get_current_time()}Simple Service started...')
     main()

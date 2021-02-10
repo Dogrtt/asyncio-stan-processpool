@@ -16,21 +16,22 @@ async def get_sc():
     sc = StanClient()
 
     try:
-        await nc.connect(servers=['nats://localhost:4223'], io_loop=asyncio.get_event_loop())
+        await nc.connect(servers=['nats://localhost:4223'])
         await sc.connect('test-cluster', f'simple_service_client_{ObjectId()}', nats=nc)
     except ErrNoServers as e:
         print(e)
         return
-    print('CONNECTED!')
     return sc
 
-def simple_task(msg_body: dict):
-    async def pub(channel, payload):
-        print('PUB_0')
-        sc = await get_sc()
-        print('PUB_1')
-        await sc.publish(channel, payload=payload)
-        print('PUB_2')
 
+async def pub(channel, payload):
+    sc = await get_sc()
+    await sc.publish(channel, payload=payload)
+    await sc.close()
+
+
+def simple_task(msg_body: dict):
     print(f"{get_current_time()}[PID: {os.getpid()}]  Task started ({msg_body})")
-    asyncio.create_task(pub('task:simple:started', b'{"test": "test"}'))
+
+    # async_loop = asyncio.get_event_loop()
+    asyncio.run(pub('task:simple:started', b'{"test": "test"}'))
