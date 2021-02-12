@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import asyncio
+import json
 
 from bson import ObjectId
 from nats.aio.client import Client as NatsClient
@@ -18,10 +19,11 @@ async def run(async_loop):
     except ErrNoServers as e:
         print(e)
         return
-    await sc.publish('simple:created', b'{"simple": "simple"}')
+    for i in range(1):
+        message = json.dumps({"simple": f"simple_{i}"})
+        await sc.publish('simple:created', bytes(message.encode('utf-8')))
 
 
 if __name__ == '__main__':
     async_loop = asyncio.get_event_loop()
     async_loop.run_until_complete(run(async_loop))
-

@@ -5,8 +5,6 @@ networks:
     driver: bridge
 
 services:
-  # ########################
-  # #### NATS Streaming ####
   nats:
     image: nats-streaming
     container_name: simple_nats

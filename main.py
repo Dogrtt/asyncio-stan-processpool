@@ -14,12 +14,12 @@ from helpers import get_current_time
 from task import simple_task
 
 
-async def run(async_loop):
+async def run():
     nc = NatsClient()
     sc = StanClient()
 
     try:
-        await nc.connect(servers=['nats://localhost:4223'], io_loop=async_loop)
+        await nc.connect(servers=['nats://nats:4223'], io_loop=asyncio.get_running_loop())
         await sc.connect('test-cluster', f'simple_service_client_{ObjectId()}', nats=nc)
     except ErrNoServers as e:
         print(e)
@@ -33,7 +33,7 @@ async def run(async_loop):
 
         async def new_task(event_data):
             body = json.loads(event_data)
-            await async_loop.run_in_executor(executor, simple_task, body)
+            await asyncio.get_running_loop().run_in_executor(executor, simple_task, body)
 
         asyncio.create_task(new_task(data))
 
@@ -42,7 +42,7 @@ async def run(async_loop):
 
 def main():
     async_loop = asyncio.get_event_loop()
-    async_loop.run_until_complete(run(async_loop))
+    async_loop.run_until_complete(run())
     try:
         async_loop.run_forever()
     except KeyboardInterrupt:
