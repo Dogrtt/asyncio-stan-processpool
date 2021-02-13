@@ -19,7 +19,7 @@ async def run(async_loop):
     except ErrNoServers as e:
         print(e)
         return
-    for i in range(1):
+    for i in range(10):
         message = json.dumps({"simple": f"simple_{i}"})
         await sc.publish('simple:created', bytes(message.encode('utf-8')))
 
